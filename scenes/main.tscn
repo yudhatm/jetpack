@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=4 uid="uid://cj3fhipabw0yv"]
+[gd_scene load_steps=7 format=4 uid="uid://cj3fhipabw0yv"]
 
 [ext_resource type="Texture2D" uid="uid://cnexcmy440qy1" path="res://assets/tilesetplain_16x16.png" id="1_o5qli"]
 [ext_resource type="Script" uid="uid://cnckflv8qag5g" path="res://scenes/main.gd" id="1_sugp2"]
@@ -70,6 +70,9 @@ texture = ExtResource("1_o5qli")
 physics_layer_0/collision_layer = 1
 sources/0 = SubResource("TileSetAtlasSource_o5qli")
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_sugp2"]
+size = Vector2(265, 20)
+
 [node name="Main" type="Node2D"]
 script = ExtResource("1_sugp2")
 
@@ -81,3 +84,9 @@ tile_set = SubResource("TileSet_0wfyh")
 z_index = 3
 position = Vector2(16, 133)
 scale = Vector2(1.5, 1.5)
+
+[node name="Node2D" type="StaticBody2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Node2D"]
+position = Vector2(116, -8)
+shape = SubResource("RectangleShape2D_sugp2")
