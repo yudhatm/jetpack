@@ -4,14 +4,17 @@ extends CharacterBody2D
 @export var fall_force = 400.0
 @export var air_resistance = 0.98
 @export var max_fall_speed = 100.0
-@export var max_rise_speed = -300.0 
+@export var max_rise_speed = -300.0
 
 @onready var anim2d: AnimatedSprite2D = $AnimatedSprite2D
+var main_script
 
 func _ready() -> void:
-	pass
+	main_script = get_parent()
 
 func _physics_process(delta):
+	velocity.x = main_script.speed
+	
 	if not is_on_floor():
 		if velocity.y < 0:
 			anim2d.play("jump")
@@ -30,7 +33,5 @@ func _physics_process(delta):
 	
 	# Clamp the vertical velocity
 	velocity.y = clamp(velocity.y, max_rise_speed, max_fall_speed)
-	
-	velocity.x = 0
  
 	move_and_slide()

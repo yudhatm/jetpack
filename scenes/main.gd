@@ -1,29 +1,26 @@
 extends Node2D
 
-@export var scroll_speed: float = 50.0
 @export var section_width: float = 240.0
-var tilemap_sections = []
 
 @onready var ground_tile: TileMapLayer = $GroundTile
+@onready var player: CharacterBody2D = $Player
+@onready var camera: Camera2D = $Camera2D
+@onready var sky_border: StaticBody2D = $SkyBorder
+
+const START_SPEED = 100.0
+const MAX_SPEED = 250.0
+const CAMERA_OFFSET = -20
+const TILE_MOVE_DISTANCE = 0.5
+const TILE_REPOSITION_DISTANCE = 0.2
+
+var speed: float = 0
 
 func _ready():
-	var original_tilemap = ground_tile  # Make sure this path is correct
-	
-	original_tilemap.position.x = 0
-	tilemap_sections.append(original_tilemap)
-	
-	# Create duplicates
-	for i in range(1, 3):
-		var section = original_tilemap.duplicate()
-		section.position.x = section_width * i
-		add_child(section)
-		tilemap_sections.append(section)
-		print("Section ", i, " position: ", section.position.x)
+	speed = START_SPEED
 
 func _process(delta):
-	for i in range(tilemap_sections.size()):
-		var section = tilemap_sections[i]
-		section.position.x -= scroll_speed * delta
-		
-		if section.position.x <= -section_width:
-			section.position.x += section_width * tilemap_sections.size()
+	camera.global_position.x = player.global_position.x + CAMERA_OFFSET
+	
+	if camera.global_position.x - ground_tile.position.x > section_width * TILE_MOVE_DISTANCE:
+		ground_tile.position.x += section_width * TILE_REPOSITION_DISTANCE
+		sky_border.position.x += section_width * TILE_REPOSITION_DISTANCE    
