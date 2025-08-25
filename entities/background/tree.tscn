@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3 uid="uid://bdyoxx56vo8di"]
+
+[ext_resource type="Script" uid="uid://b2hp4f3liuxnx" path="res://entities/background/environment.gd" id="1_i8xv7"]
+[ext_resource type="Texture2D" uid="uid://cnexcmy440qy1" path="res://assets/tilesetplain_16x16.png" id="1_l4tws"]
+
+[node name="Tree" type="Node2D"]
+script = ExtResource("1_i8xv7")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(0, -24)
+texture = ExtResource("1_l4tws")
+region_enabled = true
+region_rect = Rect2(32, 48, 16, 48)

@@ -1,8 +1,9 @@
-[gd_scene load_steps=7 format=4 uid="uid://cj3fhipabw0yv"]
+[gd_scene load_steps=8 format=4 uid="uid://cj3fhipabw0yv"]
 
 [ext_resource type="Texture2D" uid="uid://cnexcmy440qy1" path="res://assets/tilesetplain_16x16.png" id="1_o5qli"]
 [ext_resource type="Script" uid="uid://cnckflv8qag5g" path="res://scenes/main.gd" id="1_sugp2"]
 [ext_resource type="PackedScene" uid="uid://5t3sxrin54yy" path="res://entities/player/player.tscn" id="2_0wfyh"]
+[ext_resource type="PackedScene" uid="uid://bksjq2pwu2suo" path="res://scenes/hud.tscn" id="4_jyhfs"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_o5qli"]
 texture = ExtResource("1_o5qli")
@@ -93,3 +94,9 @@ shape = SubResource("RectangleShape2D_sugp2")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 anchor_mode = 0
+
+[node name="EnvironmentTimer" type="Timer" parent="."]
+
+[node name="HUD" parent="." instance=ExtResource("4_jyhfs")]
+
+[connection signal="timeout" from="EnvironmentTimer" to="." method="_on_environment_timer_timeout"]
