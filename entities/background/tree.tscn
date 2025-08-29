@@ -4,6 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://cnexcmy440qy1" path="res://assets/tilesetplain_16x16.png" id="1_l4tws"]
 
 [node name="Tree" type="Node2D"]
+z_index = -1
 script = ExtResource("1_i8xv7")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]

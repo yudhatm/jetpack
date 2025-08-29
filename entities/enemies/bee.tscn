@@ -1,0 +1,45 @@
+[gd_scene load_steps=7 format=3 uid="uid://ujyewu65buag"]
+
+[ext_resource type="Texture2D" uid="uid://cnexcmy440qy1" path="res://assets/tilesetplain_16x16.png" id="1_hm031"]
+[ext_resource type="Script" uid="uid://2fyswhyneshh" path="res://entities/enemies/bee.gd" id="1_tmidh"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tmidh"]
+atlas = ExtResource("1_hm031")
+region = Rect2(64, 96, 16, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tcp2r"]
+atlas = ExtResource("1_hm031")
+region = Rect2(80, 96, 16, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_bxsl3"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tmidh")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tcp2r")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 10.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_hm031"]
+radius = 7.0
+
+[node name="Bee" type="Area2D"]
+script = ExtResource("1_tmidh")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(0, -16)
+sprite_frames = SubResource("SpriteFrames_bxsl3")
+animation = &"idle"
+autoplay = "idle"
+frame_progress = 0.142206
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -7)
+shape = SubResource("CircleShape2D_hm031")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

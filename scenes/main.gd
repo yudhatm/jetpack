@@ -8,14 +8,18 @@ const TILE_REPOSITION_DISTANCE = 0.2
 const SPAWN_OFFSET = 30
 const SURFACE_OFFSET = 16
 const SCORE_UPDATE_INTERVAL = 0.1
+const TOP_SPAWN_EDGE = 140
+const BOTTOW_SPAWN_EDGE = 40
 
 @onready var ground_tile: TileMapLayer = $GroundTile
 @onready var player: CharacterBody2D = $Player
 @onready var camera: Camera2D = $Camera2D
 @onready var sky_border: StaticBody2D = $SkyBorder
 @onready var environment_timer: Timer = $EnvironmentTimer
+@onready var spawn_timer: Timer = $SpawnTimer
 
 var tree_scene = preload("res://entities/background/tree.tscn")
+var bee = preload("res://entities/enemies/bee.tscn")
 
 var speed: float = 0
 var screen_size: Vector2
@@ -26,6 +30,7 @@ func _ready():
 	screen_size = get_viewport().size
 	speed = START_SPEED
 	_spawn_environment()
+	_spawn_enemies()
 
 func _process(delta):
 	camera.global_position.x = player.global_position.x + CAMERA_OFFSET
@@ -51,6 +56,15 @@ func _spawn_environment():
 	environment_timer.wait_time = randf_range(1.0, 2.0)
 	environment_timer.start()
 	
+func _spawn_enemies():
+	var bee = bee.instantiate()
+	add_child(bee)
+	bee.position.x = player.position.x + screen_size.x + SPAWN_OFFSET
+	bee.position.y = randf_range(screen_size.y - TOP_SPAWN_EDGE, screen_size.y - BOTTOW_SPAWN_EDGE)
+	
+	spawn_timer.wait_time = 2
+	spawn_timer.start()
+	
 func _calculate_score():
 	var base_score = 10
 	var bonus_score = max(0, (speed - START_SPEED) / 50)
@@ -59,3 +73,6 @@ func _calculate_score():
 
 func _on_environment_timer_timeout() -> void:
 	_spawn_environment()
+	
+func _on_spawn_timer_timeout() -> void:
+	_spawn_enemies()
