@@ -8,8 +8,9 @@ const TILE_REPOSITION_DISTANCE = 0.2
 const SPAWN_OFFSET = 30
 const SURFACE_OFFSET = 16
 const SCORE_UPDATE_INTERVAL = 0.1
-const TOP_SPAWN_EDGE = 140
-const BOTTOW_SPAWN_EDGE = 40
+const TOP_SPAWN_EDGE = 30
+const MIDDLE_SPAWN_EDGE = 75
+const BOTTOW_SPAWN_EDGE = 130
 
 @onready var ground_tile: TileMapLayer = $GroundTile
 @onready var player: CharacterBody2D = $Player
@@ -25,6 +26,9 @@ var speed: float = 0
 var screen_size: Vector2
 var score: int = 0
 var score_timer: float = 0.0
+var rng = RandomNumberGenerator.new()
+var spawn_coordinate = [TOP_SPAWN_EDGE, MIDDLE_SPAWN_EDGE, BOTTOW_SPAWN_EDGE]
+var weights = [1, 1, 2]
 
 func _ready():
 	screen_size = get_viewport().size
@@ -57,10 +61,42 @@ func _spawn_environment():
 	environment_timer.start()
 	
 func _spawn_enemies():
-	var bee = bee.instantiate()
-	add_child(bee)
-	bee.position.x = player.position.x + screen_size.x + SPAWN_OFFSET
-	bee.position.y = randf_range(screen_size.y - TOP_SPAWN_EDGE, screen_size.y - BOTTOW_SPAWN_EDGE)
+	var spawn_coordinate = spawn_coordinate[rng.rand_weighted(weights)]
+	var pattern_amount = randi_range(1, 3)
+	
+	var bee1 = bee.instantiate()
+	var bee2 = bee.instantiate()
+	var bee3 = bee.instantiate()
+	
+	add_child(bee1)
+	
+	bee1.position.x = player.position.x + screen_size.x + SPAWN_OFFSET
+	bee1.position.y = spawn_coordinate
+	
+	var BEE_X_LEFT = bee1.position.x - 16
+	var BEE_X_RIGHT = bee1.position.x + 16
+	var BEE_Y_TOP = bee1.position.y - 16
+	var BEE_Y_BOTTOM = bee1.position.y + 16 
+	
+	match pattern_amount:
+		1:
+			pass #Do Nothing
+		2:
+			add_child(bee2)
+			
+			bee2.position.x = [BEE_X_LEFT, BEE_X_RIGHT].pick_random()
+			bee2.position.y = BEE_Y_TOP
+		3:
+			add_child(bee2)
+			add_child(bee3)
+			
+			var bee2_x_pos = [BEE_X_LEFT, BEE_X_RIGHT].pick_random()
+			
+			bee2.position.x = bee2_x_pos
+			bee2.position.y = BEE_Y_TOP
+			
+			bee3.position.x = BEE_X_LEFT if bee2_x_pos == BEE_X_RIGHT else BEE_X_RIGHT
+			bee3.position.y = BEE_Y_BOTTOM
 	
 	spawn_timer.wait_time = 2
 	spawn_timer.start()
