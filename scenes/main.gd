@@ -11,6 +11,9 @@ const SCORE_UPDATE_INTERVAL = 0.1
 const TOP_SPAWN_EDGE = 30
 const MIDDLE_SPAWN_EDGE = 75
 const BOTTOW_SPAWN_EDGE = 130
+const COIN_SCORE = 100
+
+signal increase_coin_count
 
 @onready var ground_tile: TileMapLayer = $GroundTile
 @onready var player: CharacterBody2D = $Player
@@ -21,20 +24,26 @@ const BOTTOW_SPAWN_EDGE = 130
 
 var tree_scene = preload("res://entities/background/tree.tscn")
 var bee = preload("res://entities/enemies/bee.tscn")
+var coin = preload("res://entities/collectible/coin.tscn")
 
 var speed: float = 0
 var screen_size: Vector2
 var score: int = 0
 var score_timer: float = 0.0
+
 var rng = RandomNumberGenerator.new()
 var spawn_coordinate = [TOP_SPAWN_EDGE, MIDDLE_SPAWN_EDGE, BOTTOW_SPAWN_EDGE]
 var weights = [1, 1, 2]
+var spawn_priority = ["enemy", "coin"]
+var priority_weights = [2, 1]
 
 func _ready():
 	screen_size = get_viewport().size
 	speed = START_SPEED
 	_spawn_environment()
 	_spawn_enemies()
+	
+	increase_coin_count.connect(_increment_coin)
 
 func _process(delta):
 	camera.global_position.x = player.global_position.x + CAMERA_OFFSET
@@ -101,6 +110,22 @@ func _spawn_enemies():
 	spawn_timer.wait_time = 2
 	spawn_timer.start()
 	
+func _spawn_coins():
+	var spawn_coordinate = spawn_coordinate[rng.rand_weighted(weights)]
+	var coin_count = randi_range(3, 8)
+	
+	for i in coin_count:
+		var new_coin = coin.instantiate()
+		add_child(new_coin)
+		
+		new_coin.position = Vector2(player.position.x + screen_size.x + SPAWN_OFFSET + (i * 20), spawn_coordinate)
+	
+	spawn_timer.wait_time = 2
+	spawn_timer.start()
+
+func _increment_coin():
+	score += COIN_SCORE
+
 func _calculate_score():
 	var base_score = 10
 	var bonus_score = max(0, (speed - START_SPEED) / 50)
@@ -111,4 +136,9 @@ func _on_environment_timer_timeout() -> void:
 	_spawn_environment()
 	
 func _on_spawn_timer_timeout() -> void:
-	_spawn_enemies()
+	var selected_spawn_node = spawn_priority[rng.rand_weighted(priority_weights)]
+	match selected_spawn_node:
+		"enemy":
+			_spawn_enemies()
+		"coin":
+			_spawn_coins()
