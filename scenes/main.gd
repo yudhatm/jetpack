@@ -1,7 +1,8 @@
 extends Node2D
 
 const START_SPEED = 100.0
-const MAX_SPEED = 250.0
+const MAX_SPEED = 300.0
+const SPEED_INCREASE = 25.0
 const CAMERA_OFFSET = -20
 const TILE_MOVE_DISTANCE = 0.5
 const TILE_REPOSITION_DISTANCE = 0.2
@@ -30,6 +31,11 @@ var speed: float = 0
 var screen_size: Vector2
 var score: int = 0
 var score_timer: float = 0.0
+var spawn_wait_time = 2.0
+
+var startingPos: Vector2
+var totalDistance: float = 0.0
+var distance_threshold = 500.0
 
 var rng = RandomNumberGenerator.new()
 var spawn_coordinate = [TOP_SPAWN_EDGE, MIDDLE_SPAWN_EDGE, BOTTOW_SPAWN_EDGE]
@@ -39,11 +45,8 @@ var priority_weights = [2, 1]
 
 func _ready():
 	screen_size = get_viewport().size
-	speed = START_SPEED
-	_spawn_environment()
-	_spawn_enemies()
-	
 	increase_coin_count.connect(_increment_coin)
+	reset_game()
 
 func _process(delta):
 	camera.global_position.x = player.global_position.x + CAMERA_OFFSET
@@ -57,6 +60,27 @@ func _process(delta):
 	if score_timer >= SCORE_UPDATE_INTERVAL:
 		_calculate_score()
 		score_timer = 0.0
+	
+	updateSpeed()
+	
+func reset_game():
+	speed = START_SPEED
+	score = 0
+	score_timer = 0.0
+	startingPos = player.global_position
+	totalDistance = 0.0
+	spawn_wait_time = 2.0
+	
+	_spawn_environment()
+	_spawn_enemies()
+	
+func updateSpeed():
+	totalDistance = abs(player.position.x - startingPos.x)
+	
+	if totalDistance >= distance_threshold and speed < MAX_SPEED:
+		speed += SPEED_INCREASE
+		distance_threshold += distance_threshold * 1.5
+		spawn_wait_time -= 0.1
 		
 	speed = clamp(speed, START_SPEED, MAX_SPEED)
 
@@ -107,7 +131,7 @@ func _spawn_enemies():
 			bee3.position.x = BEE_X_LEFT if bee2_x_pos == BEE_X_RIGHT else BEE_X_RIGHT
 			bee3.position.y = BEE_Y_BOTTOM
 	
-	spawn_timer.wait_time = 2
+	spawn_timer.wait_time = spawn_wait_time
 	spawn_timer.start()
 	
 func _spawn_coins():
@@ -120,7 +144,7 @@ func _spawn_coins():
 		
 		new_coin.position = Vector2(player.position.x + screen_size.x + SPAWN_OFFSET + (i * 20), spawn_coordinate)
 	
-	spawn_timer.wait_time = 2
+	spawn_timer.wait_time = spawn_wait_time
 	spawn_timer.start()
 
 func _increment_coin():
