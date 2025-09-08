@@ -68,7 +68,7 @@ texture = ExtResource("1_o5qli")
 6:7/0 = 0
 
 [sub_resource type="TileSet" id="TileSet_0wfyh"]
-physics_layer_0/collision_layer = 1
+physics_layer_0/collision_layer = 9
 sources/0 = SubResource("TileSetAtlasSource_o5qli")
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_sugp2"]
@@ -88,6 +88,7 @@ position = Vector2(20, 133)
 scale = Vector2(1.5, 1.5)
 
 [node name="SkyBorder" type="StaticBody2D" parent="."]
+collision_layer = 9
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="SkyBorder"]
 position = Vector2(197.75, -8)

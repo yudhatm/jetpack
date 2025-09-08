@@ -8,6 +8,6 @@ func _process(delta: float) -> void:
 	pass
 
 func _on_body_entered(body: Node2D) -> void:
-	if body.name.to_lower() == "player":
-		#TODO: reduce player health
-		pass
+	if body.is_in_group(body.name.to_lower()) and body.is_immune == false:
+		get_parent().player_damaged.emit()
+		body.get_hit.emit()

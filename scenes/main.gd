@@ -15,6 +15,7 @@ const BOTTOW_SPAWN_EDGE = 130
 const COIN_SCORE = 100
 
 signal increase_coin_count
+signal player_damaged
 
 @onready var ground_tile: TileMapLayer = $GroundTile
 @onready var player: CharacterBody2D = $Player
@@ -27,6 +28,7 @@ var tree_scene = preload("res://entities/background/tree.tscn")
 var bee = preload("res://entities/enemies/bee.tscn")
 var coin = preload("res://entities/collectible/coin.tscn")
 
+var player_health: int = 3
 var speed: float = 0
 var screen_size: Vector2
 var score: int = 0
@@ -46,6 +48,7 @@ var priority_weights = [2, 1]
 func _ready():
 	screen_size = get_viewport().size
 	increase_coin_count.connect(_increment_coin)
+	player_damaged.connect(_reduce_health)
 	reset_game()
 
 func _process(delta):
@@ -149,6 +152,14 @@ func _spawn_coins():
 
 func _increment_coin():
 	score += COIN_SCORE
+	
+func _reduce_health():
+	player_health -= 1
+	print("Health: " + str(player_health))
+	
+	if player_health <= 0:
+		print("Game over!")
+		pass
 
 func _calculate_score():
 	var base_score = 10

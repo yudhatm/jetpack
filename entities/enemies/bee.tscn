@@ -28,7 +28,8 @@ animations = [{
 [sub_resource type="CircleShape2D" id="CircleShape2D_hm031"]
 radius = 7.0
 
-[node name="Bee" type="Area2D"]
+[node name="Bee" type="Area2D" groups=["enemy"]]
+collision_layer = 2
 script = ExtResource("1_tmidh")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]

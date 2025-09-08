@@ -8,6 +8,6 @@ func _ready() -> void:
 
 func _on_body_entered(body: Node2D) -> void:
 	#TODO: Increase collected coin count and destroy
-	if body.name.to_lower() == "player":
+	if body.is_in_group(body.name.to_lower()):
 		get_parent().increase_coin_count.emit()
 		animation_player.play("picked_up")

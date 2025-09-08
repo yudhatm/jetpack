@@ -1,37 +1,44 @@
-[gd_scene load_steps=11 format=3 uid="uid://5t3sxrin54yy"]
+[gd_scene load_steps=16 format=3 uid="uid://5t3sxrin54yy"]
 
 [ext_resource type="Script" uid="uid://df1vq1tiim3x7" path="res://entities/player/player.gd" id="1_abrql"]
 [ext_resource type="Texture2D" uid="uid://beqngeihnfic6" path="res://assets/Robot Spritesheet.png" id="1_symyc"]
+[ext_resource type="Shader" uid="uid://b5ikam2gutt5h" path="res://shaders/hit_flash.tres" id="2_sglur"]
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_fkugw"]
-atlas = ExtResource("1_symyc")
-region = Rect2(0, 48, 16, 16)
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_abrql"]
+resource_local_to_scene = true
+shader = ExtResource("2_sglur")
+shader_parameter/enabled = false
+shader_parameter/tint = Color(1, 1, 1, 1)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_8fjmc"]
 atlas = ExtResource("1_symyc")
-region = Rect2(0, 32, 16, 16)
+region = Rect2(0, 48, 16, 16)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_symyc"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_qiwj3"]
 atlas = ExtResource("1_symyc")
-region = Rect2(0, 16, 16, 16)
+region = Rect2(0, 32, 16, 16)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_abrql"]
 atlas = ExtResource("1_symyc")
-region = Rect2(16, 16, 16, 16)
+region = Rect2(0, 16, 16, 16)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_sglur"]
 atlas = ExtResource("1_symyc")
-region = Rect2(32, 16, 16, 16)
+region = Rect2(16, 16, 16, 16)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_bls4j"]
 atlas = ExtResource("1_symyc")
+region = Rect2(32, 16, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fkugw"]
+atlas = ExtResource("1_symyc")
 region = Rect2(48, 16, 16, 16)
 
-[sub_resource type="SpriteFrames" id="SpriteFrames_fkugw"]
+[sub_resource type="SpriteFrames" id="SpriteFrames_8fjmc"]
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_fkugw")
+"texture": SubResource("AtlasTexture_8fjmc")
 }],
 "loop": true,
 "name": &"fall",
@@ -39,16 +46,13 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_8fjmc")
+"texture": SubResource("AtlasTexture_qiwj3")
 }],
 "loop": true,
 "name": &"jump",
 "speed": 5.0
 }, {
 "frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_symyc")
-}, {
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_abrql")
 }, {
@@ -57,6 +61,9 @@ animations = [{
 }, {
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_bls4j")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fkugw")
 }],
 "loop": true,
 "name": &"running",
@@ -67,14 +74,64 @@ animations = [{
 radius = 3.0
 height = 12.0
 
-[node name="Player" type="CharacterBody2D"]
+[sub_resource type="Animation" id="Animation_sglur"]
+resource_name = "hit_flash"
+length = 0.6
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("AnimatedSprite2D:material:shader_parameter/enabled")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2, 0.4, 0.6),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 1,
+"values": [true, false, true, false]
+}
+
+[sub_resource type="Animation" id="Animation_bls4j"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("AnimatedSprite2D:material:shader_parameter/enabled")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_fkugw"]
+_data = {
+&"RESET": SubResource("Animation_bls4j"),
+&"hit_flash": SubResource("Animation_sglur")
+}
+
+[node name="Player" type="CharacterBody2D" groups=["player"]]
+collision_mask = 14
 script = ExtResource("1_abrql")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
-sprite_frames = SubResource("SpriteFrames_fkugw")
-animation = &"running"
+material = SubResource("ShaderMaterial_abrql")
+sprite_frames = SubResource("SpriteFrames_8fjmc")
+animation = &"fall"
 autoplay = "running"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, 1)
 shape = SubResource("CapsuleShape2D_symyc")
+
+[node name="HitFlashAnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_fkugw")
+}
+
+[node name="InvisibleTimer" type="Timer" parent="."]
+wait_time = 0.6
+one_shot = true
+
+[connection signal="timeout" from="InvisibleTimer" to="." method="_on_invisible_timer_timeout"]

@@ -145,7 +145,8 @@ _data = {
 &"picked_up": SubResource("Animation_rcae4")
 }
 
-[node name="Coin" type="Area2D"]
+[node name="Coin" type="Area2D" groups=["coin"]]
+collision_layer = 4
 script = ExtResource("1_rcae4")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
