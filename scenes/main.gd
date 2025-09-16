@@ -48,11 +48,13 @@ var spawn_priority = ["enemy", "coin"]
 var priority_weights = [2, 1]
 
 func _ready():
-	screen_size = get_viewport().size
+	screen_size = get_viewport().get_visible_rect().size
+	get_viewport().size_changed.connect(_on_viewport_size_changed)
+	
 	increase_coin_count.connect(_increment_coin)
 	player_damaged.connect(_reduce_health)
 	startingPos = player.global_position
-	tileStartingPos = ground_tile.position
+	tileStartingPos = ground_tile.position  
 	
 	reset_game()
 
@@ -70,6 +72,9 @@ func _process(delta):
 		score_timer = 0.0
 	
 	updateSpeed()
+	
+func _on_viewport_size_changed():
+	screen_size = get_viewport().get_visible_rect().size
 	
 func reset_game():
 	speed = START_SPEED

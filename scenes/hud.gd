@@ -23,5 +23,7 @@ func update_heart_display():
 		hearts_list[i].visible = i < parent_node.player_health
 
 func _on_main_menu_pressed() -> void:
-	pass
+	parent_node.reset_game()
+	get_tree().paused = false
+	get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
 	
