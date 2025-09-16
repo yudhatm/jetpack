@@ -23,6 +23,7 @@ signal player_damaged
 @onready var sky_border: StaticBody2D = $SkyBorder
 @onready var environment_timer: Timer = $EnvironmentTimer
 @onready var spawn_timer: Timer = $SpawnTimer
+@onready var hud: CanvasLayer = $HUD
 
 var tree_scene = preload("res://entities/background/tree.tscn")
 var bee = preload("res://entities/enemies/bee.tscn")
@@ -156,6 +157,7 @@ func _increment_coin():
 func _reduce_health():
 	player_health -= 1
 	print("Health: " + str(player_health))
+	hud.update_heart_display()
 	
 	if player_health <= 0:
 		print("Game over!")

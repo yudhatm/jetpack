@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://bksjq2pwu2suo"]
+[gd_scene load_steps=3 format=3 uid="uid://bksjq2pwu2suo"]
 
 [ext_resource type="Script" uid="uid://dof336c45t7o4" path="res://scenes/hud.gd" id="1_ahhtf"]
+[ext_resource type="PackedScene" uid="uid://j1j1nbs7ihpv" path="res://scenes/heart.tscn" id="2_oo0fn"]
 
 [node name="HUD" type="CanvasLayer"]
 script = ExtResource("1_ahhtf")
@@ -19,3 +20,29 @@ theme_override_font_sizes/font_size = 10
 text = "Score: 0"
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="heartBoxContainer" type="HBoxContainer" parent="."]
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -15.0
+offset_right = 40.0
+grow_vertical = 0
+
+[node name="heart" type="TextureRect" parent="heartBoxContainer"]
+custom_minimum_size = Vector2(10, 0)
+layout_mode = 2
+
+[node name="heart" parent="heartBoxContainer/heart" instance=ExtResource("2_oo0fn")]
+
+[node name="heart2" type="TextureRect" parent="heartBoxContainer"]
+custom_minimum_size = Vector2(10, 0)
+layout_mode = 2
+
+[node name="heart" parent="heartBoxContainer/heart2" instance=ExtResource("2_oo0fn")]
+
+[node name="heart3" type="TextureRect" parent="heartBoxContainer"]
+custom_minimum_size = Vector2(10, 0)
+layout_mode = 2
+
+[node name="heart" parent="heartBoxContainer/heart3" instance=ExtResource("2_oo0fn")]
