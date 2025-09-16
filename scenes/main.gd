@@ -37,6 +37,7 @@ var score_timer: float = 0.0
 var spawn_wait_time = 2.0
 
 var startingPos: Vector2
+var tileStartingPos: Vector2
 var totalDistance: float = 0.0
 var distance_threshold = 500.0
 
@@ -50,6 +51,9 @@ func _ready():
 	screen_size = get_viewport().size
 	increase_coin_count.connect(_increment_coin)
 	player_damaged.connect(_reduce_health)
+	startingPos = player.global_position
+	tileStartingPos = ground_tile.position
+	
 	reset_game()
 
 func _process(delta):
@@ -71,9 +75,10 @@ func reset_game():
 	speed = START_SPEED
 	score = 0
 	score_timer = 0.0
-	startingPos = player.global_position
 	totalDistance = 0.0
 	spawn_wait_time = 2.0
+	player.position = startingPos
+	ground_tile.position = tileStartingPos
 	
 	_spawn_environment()
 	_spawn_enemies()
@@ -161,7 +166,9 @@ func _reduce_health():
 	
 	if player_health <= 0:
 		print("Game over!")
-		pass
+		get_tree().paused = true
+		hud.game_over_screen.visible = true
+		
 
 func _calculate_score():
 	var base_score = 10

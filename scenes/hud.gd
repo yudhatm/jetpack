@@ -1,11 +1,13 @@
 extends CanvasLayer
 
 @onready var score: Label = $Score
+@onready var game_over_screen: CanvasLayer = $game_over_screen
 
 var parent_node: Node2D
 var hearts_list: Array[TextureRect]
 
 func _ready() -> void:
+	process_mode = Node.PROCESS_MODE_ALWAYS
 	parent_node = get_parent()
 	
 	var hearts_textures = $heartBoxContainer
@@ -19,3 +21,7 @@ func _process(delta: float) -> void:
 func update_heart_display():
 	for i in range(hearts_list.size()):
 		hearts_list[i].visible = i < parent_node.player_health
+
+func _on_main_menu_pressed() -> void:
+	pass
+	
