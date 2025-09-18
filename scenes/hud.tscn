@@ -63,55 +63,13 @@ anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
 offset_left = -46.0
-offset_top = 14.0
+offset_top = 50.0
 offset_right = 46.0
-offset_bottom = 37.0
+offset_bottom = 73.0
 grow_horizontal = 2
 text = "Game Over!"
 horizontal_alignment = 1
 vertical_alignment = 1
-
-[node name="high_score" type="Label" parent="game_over_screen"]
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -46.0
-offset_top = 37.0
-offset_right = 46.0
-offset_bottom = 57.0
-grow_horizontal = 2
-theme_override_font_sizes/font_size = 14
-text = "High Score"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="top_score_list" type="VBoxContainer" parent="game_over_screen"]
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -20.0
-offset_top = -18.0
-offset_right = 20.0
-offset_bottom = 32.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="top_score" type="Label" parent="game_over_screen/top_score_list"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 10
-text = "1. 10000"
-
-[node name="top_score2" type="Label" parent="game_over_screen/top_score_list"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 10
-text = "2. 10000"
-
-[node name="top_score3" type="Label" parent="game_over_screen/top_score_list"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 10
-text = "3. 10000"
 
 [node name="main_menu" type="Button" parent="game_over_screen"]
 anchors_preset = 8
@@ -120,13 +78,13 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -37.0
-offset_top = 40.0
+offset_top = 19.0
 offset_right = 37.0
-offset_bottom = 65.0
+offset_bottom = 44.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_font_sizes/font_size = 12
-text = "Main Menu
+text = "Play Again
 "
 
 [connection signal="pressed" from="game_over_screen/main_menu" to="." method="_on_main_menu_pressed"]
